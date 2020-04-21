@@ -56,9 +56,14 @@
             <artifactId>h2</artifactId>
             <version>1.4.199</version><!--$NO-MVN-MAN-VER$-->
             <scope>runtime</scope>    		
-        </dependency>		
+        </dependency>
+        <!-- tag::template engine thymeleaf -->
+        <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+		<!-- end::template engine thymeleaf -->
 	</dependencies>
-
 	<build>
 		<plugins>
 			<plugin>
@@ -67,5 +72,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>
