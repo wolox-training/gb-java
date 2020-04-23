@@ -1,12 +1,11 @@
 package wolox.training.models;
 
 import javax.persistence.Id;
-import javax.persistence.Column;
+import javax.validation.constraints.NotNull;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 
-import org.springframework.data.annotation.PersistenceConstructor;
 
 @Entity
 public class Book {
@@ -15,46 +14,34 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 	
-	@Column(nullable = true)
+	@NotNull
 	private String genre; 
 
-	@Column(nullable = false)
+	@NotNull
     private String author;
 	
-	@Column(nullable = false, unique = true)
+	@NotNull
     private String image;
 	
-	@Column(nullable = false, unique = true)
+	@NotNull
     private String title;
 	
-	@Column(nullable = false)
+	@NotNull
 	private String subtitle;
 
-	@Column(nullable = false)
+	@NotNull
 	private String publisher;
 	
-	@Column(nullable = false)
+	@NotNull
 	private String year;
 	
-	@Column(nullable = false)
+	@NotNull
 	private int pages = 0;
 	
-	@Column(nullable = false)
+	@NotNull
 	private String isbn;
-
-	@PersistenceConstructor
-	public Book() {
-		genre = "";
-		author = "";
-		image = "";
-		title = "";
-		subtitle = "";
-		publisher = "";
-		year = "";
-		pages = 0;
-		isbn = "";
-	}
 	
+
 	public Book(String genre, String author, String image, String title, String subtitle, String publisher, String	year, int pages, String isbn) {		
 		this.genre = genre;
 		this.author = author;
@@ -113,10 +100,6 @@ public class Book {
 
 	public void setGenre(String genre) {
 		this.genre = genre;
-	}
-
-	public void setId(long id) {
-		this.id = id;
 	}
 
 	public void setImage(String image) {
