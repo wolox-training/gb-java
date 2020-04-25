@@ -34,9 +34,8 @@ public class BookController {
 		Sort sortByYear = Sort.by("year").descending();
 		Book book bookRepository.findByAuthorAndSort(author, sortByYear);
 		*/
-		//Sorting With the OrderBy Method Keyword
-		Optional<Book> optionalBook = bookRepository.findFirstByAuthorOrderByYear(author);		
-		return optionalBook.orElseThrow(() -> new BookNotFoundException("No se encontro libro del autor " + author));
+		//Sorting With the OrderBy Method Keyword				
+		return bookRepository.findFirstByAuthorOrderByYear(author).orElseThrow(() -> new BookNotFoundException("No se encontro libro del autor " + author));
 	}
 
 }
