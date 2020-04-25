@@ -3,10 +3,8 @@ package wolox.training.controllers;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,7 +27,7 @@ public class BookController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<Object> findByAuthor(@RequestParam String author) {
+	public Book findByAuthor(@RequestParam String author) {
 		System.out.println("En BookController -> findByAuthor");
 		//Sorting with a Sort Parameter 
 		/*
@@ -37,11 +35,8 @@ public class BookController {
 		Book book bookRepository.findByAuthorAndSort(author, sortByYear);
 		*/
 		//Sorting With the OrderBy Method Keyword
-		Book book = bookRepository.findFirstByAuthorOrderByYearDesc(author);
-		if (book == null) {
-			return ResponseEntity.notFound().build();
-		} else {			
-			return ResponseEntity.ok(book);
-		}
+		Optional<Book> optionalBook = bookRepository.findFirstByAuthorOrderByYear(author);		
+		return optionalBook.orElseThrow(() -> new BookNotFoundException("No se encontro libro del autor " + author));
 	}
+
 }

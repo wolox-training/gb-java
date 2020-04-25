@@ -19,5 +19,6 @@ public interface BookRepository extends CrudRepository<Book, Long> {
     //Book findFirstByAuthor(@NotBlank String author);    
     //Book findByAuthorAndSort(@NotBlank String author, Sort sort);    
     //Book findByAuthorOrderByYearDesc(@NotBlank String author);
-    Book findFirstByAuthorOrderByYearDesc(@NotBlank String author);
+    //Book findFirstByAuthorOrderByYearDesc(@NotBlank String author);    
+    Optional<Book> findFirstByAuthorOrderByYear(@NotBlank String author);
 }
