@@ -10,4 +10,5 @@ class TrainingApplicationTests {
 	void contextLoads() {
 	}
 
+	
 }

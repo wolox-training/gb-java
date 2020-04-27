@@ -1,0 +1,15 @@
+INSERT INTO BOOK VALUES (1,'Jeff Lindsay','Crime','ImageDexter1','9780752866765',304,'Umbriel','','Darkly Dreaming Dexter','2004');
+INSERT INTO BOOK VALUES (2,'Jeff Lindsay','Crime','ImageDexter2','9780307473714',292,'Umbriel','','Dearly Devoted Dexter','2006');
+INSERT INTO BOOK VALUES (3,'Jeff Lindsay','Crime','ImageDexter3','9780307455734',307,'Umbriel','','Dexter In The Dark','2007');
+INSERT INTO BOOK VALUES (4,'Jeff Lindsay','Crime','ImageDexter4','9781407244129',304,'Umbriel','','Dexter By Design','2009');
+INSERT INTO BOOK VALUES (5,'Jeff Lindsay','Crime','ImageDexter5','9780307474926',384,'Umbriel','','Dexter Is Delicious','2011');
+INSERT INTO BOOK VALUES (6,'Jeff Lindsay','Crime','ImageDexter6','9780307474933',352,'Umbriel','','Double Dexter','2012');
+INSERT INTO BOOK VALUES (7,'Jeff Lindsay','Crime','ImageDexter7','9780345802583',368,'Umbriel','','Dexters Final Cut','2014');
+INSERT INTO BOOK VALUES (8,'Jeff Lindsay','Crime','ImageDexter8','9780345802590',304,'Umbriel','','Dexter Is Dead','2016');
+INSERT INTO BOOK VALUES (9,'Dan Brown','Thriller','ImageRL1','9780593055045',616,'Transworld Pub','616','Angels & Demons','2000');
+INSERT INTO BOOK VALUES (10,'Dan Brown','Thriller','ImageRL2','9780307474278',689,'Scribner','','The Da Vinci Code','2003');
+INSERT INTO BOOK VALUES (11,'Dan Brown','Thriller','ImageRL3','9780385504225',528,'Scribner','','The Lost Symbol','2009');
+INSERT INTO BOOK VALUES (12,'Dan Brown','Thriller','ImageRL4','9780385537858',609,'Scribner','','Inferno','2013');
+INSERT INTO BOOK VALUES (13,'Dan Brown','Thriller','ImageRL5','9780593078754',480,'Scribner','','Origin','2017');
+INSERT INTO BOOK VALUES (14,'John Katzenbach','Mystery','ImageAnalyst','9780552150217',491,'Corgi','','The Analyst','2002');
+INSERT INTO BOOK VALUES (15,'Stephen King','Terror','ImageIT','9781982127794',1184,'Scribner','El payaso maldito','IT','1986');

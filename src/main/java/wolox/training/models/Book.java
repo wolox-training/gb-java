@@ -41,6 +41,8 @@ public class Book {
 	@NotNull
 	private String isbn;
 	
+	public Book() {
+	}
 
 	public Book(String genre, String author, String image, String title, String subtitle, String publisher, String	year, int pages, String isbn) {		
 		this.genre = genre;

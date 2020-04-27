@@ -8,4 +8,7 @@ public class BookNotFoundException  extends RuntimeException {
         super(message, cause);
     }
 
+    public BookNotFoundException(final String message) {
+        super(message);
+    }
 }
