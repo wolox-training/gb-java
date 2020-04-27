@@ -1,7 +1,7 @@
 package wolox.training.models;
 
-import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
+import javax.persistence.Id;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
