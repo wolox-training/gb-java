@@ -40,14 +40,13 @@ public class BookController {
 				.orElseThrow(() -> new BookNotFoundException("No se encontro libro de titulo " + title));
 	}
 	
-	@GetMapping()
-	@RequestMapping(params = "id")
-	public Book findOne(@RequestParam(name = "id", required = true) Long id) {
+	@GetMapping("/{id}")	
+	public Book findOne(@PathVariable(required = true) Long id) {
 		return bookRepository.findById(id)
 				.orElseThrow(() -> new BookNotFoundException("No se encontro libro " + id.toString()));
 	}
 	
-	@GetMapping()
+	@GetMapping
 	@RequestMapping(params = "author")
 	public Book findByAuthor(@RequestParam(name = "author", required = true) String author) {
 		System.out.println("En BookController -> findByAuthor");
@@ -58,7 +57,7 @@ public class BookController {
 		 */
 		//Sorting With the OrderBy Method Keyword				
 		return bookRepository.findFirstByAuthorOrderByYear(author)
-					.orElseThrow(() -> new BookNotFoundException("No se encontro libro del autor " + author));
+					.orElseThrow(() -> new BookNotFoundException("No se encontro el ultimo libro del autor " + author));
 	}
 
 	@PostMapping
@@ -70,7 +69,7 @@ public class BookController {
 	
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public void deleteBook(@PathVariable Long id) {
+	public void deleteBook(@PathVariable(required = true) Long id) {
 		System.out.println("En BookController -> deleteBook (id=" + id.toString() + ")");
 		bookRepository.findById(id)
 			.orElseThrow(() -> new BookNotFoundException("No existe el libro de id=" + id.toString()));
