@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import net.bytebuddy.implementation.bytecode.Throw;
 import wolox.training.exceptions.BookIdMismatchException;
 import wolox.training.exceptions.BookNotFoundException;
 import wolox.training.models.Book;
@@ -35,21 +35,21 @@ public class BookController {
 
 	@GetMapping
 	@RequestMapping(params = "title")
-	public Book findByTitle(@RequestParam String title) {
+	public Book findByTitle(@RequestParam(name = "title", required = true) String title) {				
 		return bookRepository.findByTitle(title)
 				.orElseThrow(() -> new BookNotFoundException("No se encontro libro de titulo " + title));
 	}
 	
-	@GetMapping
+	@GetMapping()
 	@RequestMapping(params = "id")
-	public Book findOne(@RequestParam Long id) {
+	public Book findOne(@RequestParam(name = "id", required = true) Long id) {
 		return bookRepository.findById(id)
 				.orElseThrow(() -> new BookNotFoundException("No se encontro libro " + id.toString()));
 	}
 	
-	@GetMapping
+	@GetMapping()
 	@RequestMapping(params = "author")
-	public Book findByAuthor(@RequestParam String author) {
+	public Book findByAuthor(@RequestParam(name = "author", required = true) String author) {
 		System.out.println("En BookController -> findByAuthor");
 		//Sorting with a Sort Parameter 
 		/*
@@ -78,7 +78,7 @@ public class BookController {
 	}
 	 
 	@PutMapping("/{id}")
-	@ResponseStatus(HttpStatus.ACCEPTED)
+	@ResponseStatus(HttpStatus.OK)
 	public Book updateBook(@RequestBody Book book, @PathVariable Long id) {
 		System.out.println("En BookController -> updateBook (id=" + id.toString() + ")");
 		if (!id.equals(book.getId())) {
