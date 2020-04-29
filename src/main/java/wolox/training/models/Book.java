@@ -43,8 +43,8 @@ public class Book {
 	@NotNull
 	private String isbn;
 	
-	@ManyToMany(mappedBy = "booksList")
-    private List<User> usersList;
+	@ManyToMany(mappedBy = "books")
+    private List<User> users;
 	
 	public Book() {
 	}
@@ -97,8 +97,8 @@ public class Book {
 		return title;
 	}
 
-	public List<User> getUsersList() {
-		return usersList;
+	public List<User> getUsers() {
+		return users;
 	}
 
 	public String getYear() {
@@ -137,8 +137,8 @@ public class Book {
 		this.title = title;
 	}
 
-	public void setUsersList(List<User> usersList) {
-		this.usersList = usersList;
+	public void setUsers(List<User> users) {
+		this.users = users;
 	}
 
 	public void setYear(String year) {

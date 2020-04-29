@@ -35,17 +35,11 @@ public class User {
 	@NotNull
 	private LocalDate birthDate;
 	
-	@NotNull
-	@ManyToMany(cascade = CascadeType.ALL)
-	/*
-	@JoinTable(name = "book_user", joinColumns = @JoinColumn(name = "book_id", referencedColumnName = "id"), 
-	inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
-	*/
-	
+	@ManyToMany(cascade={CascadeType.REFRESH, CascadeType.MERGE})
 	@JoinTable(name = "USER_BOOKS",
-	joinColumns = @JoinColumn(name = "userid", referencedColumnName = "id"), 
+	joinColumns = @JoinColumn(name = "userId", referencedColumnName = "id"), 
 				inverseJoinColumns = @JoinColumn(name = "bookId", referencedColumnName = "id"))
-	private List<Book> booksList = new ArrayList<Book>();
+	private List<Book> books = new ArrayList<Book>();
 	
 	
 	public User(){
@@ -76,7 +70,7 @@ public class User {
 	}
 
 	public List<Book> getBooks() {
-		return (List<Book>) Collections.unmodifiableList(booksList);
+		return (List<Book>) Collections.unmodifiableList(books);
 	}	
 
 	public void setUserName(String userName) {
@@ -91,16 +85,17 @@ public class User {
 		this.birthDate = birthDate;
 	}
 	
-	public void agregarLibro(Book book) {
-		this.booksList.add(book);
+	public List<Book> agregarLibro(Book userBook) throws BookAlreadyOwnedException {
+		if (books.contains(userBook)) {
+			throw new BookAlreadyOwnedException();
+		} else {
+			this.books.add(userBook);
+		}
+		return (List<Book>) Collections.unmodifiableList(books);
 	}
 	
-	public void eliminarLibro(Long bookId) {		
-		for (Book book : this.booksList){
-			if (bookId.equals(book.getId())) {
-				this.booksList.remove(book);
-			}
-		}
+	public void eliminarLibro(Book userBook) {
+		this.books.remove(userBook);
 	}
 	
 }
