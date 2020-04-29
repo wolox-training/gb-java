@@ -43,8 +43,8 @@ public class User {
 	*/
 	
 	@JoinTable(name = "USER_BOOKS",
-	joinColumns = @JoinColumn(name = "bookId", referencedColumnName = "id"), 
-				inverseJoinColumns = @JoinColumn(name = "userid", referencedColumnName = "id"))
+	joinColumns = @JoinColumn(name = "userid", referencedColumnName = "id"), 
+				inverseJoinColumns = @JoinColumn(name = "bookId", referencedColumnName = "id"))
 	private List<Book> booksList = new ArrayList<Book>();
 	
 	

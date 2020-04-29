@@ -1,16 +1,12 @@
 package wolox.training.models;
 
+import java.util.List;
 import javax.validation.constraints.NotNull;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-
-import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-
-import wolox.training.models.User;
 
 
 @Entity
