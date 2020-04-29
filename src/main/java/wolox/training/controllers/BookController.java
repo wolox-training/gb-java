@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import net.bytebuddy.implementation.bytecode.Throw;
 import wolox.training.exceptions.BookIdMismatchException;
 import wolox.training.exceptions.BookNotFoundException;
 import wolox.training.models.Book;
@@ -86,6 +85,6 @@ public class BookController {
 		bookRepository.findById(id)
 			.orElseThrow(() -> new BookNotFoundException("No existe el libro de id=" + id.toString()));
 		return bookRepository.save(book);
-	}	
+	}
 	
 }
