@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import wolox.training.exceptions.BookAlreadyOwnedException;
 import wolox.training.exceptions.BookIdMismatchException;
 import wolox.training.exceptions.BookNotFoundException;
+import wolox.training.exceptions.UserNotFoundException;
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
@@ -20,15 +22,15 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         super();
     }
 
-    @ExceptionHandler(BookNotFoundException.class)
+    @ExceptionHandler({BookNotFoundException.class, UserNotFoundException.class})
     protected ResponseEntity<Object> handleNotFound(Exception ex, WebRequest request) {
-    	String mensaje = ex.getMessage();
-    	if ("".equals(mensaje)) {mensaje = "Book not found";}
+    	String mensaje = ex.getMessage();    	
     	return handleExceptionInternal(ex, mensaje, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
     @ExceptionHandler({
       BookIdMismatchException.class,
+      BookAlreadyOwnedException.class,
       ConstraintViolationException.class,
       DataIntegrityViolationException.class
     })
