@@ -2,6 +2,9 @@ package wolox.training.models;
 
 import java.util.List;
 import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Entity;
@@ -43,6 +46,7 @@ public class Book {
 	@NotNull
 	private String isbn;
 	
+	@JsonIgnore
 	@ManyToMany(mappedBy = "books")
     private List<User> users;
 	
