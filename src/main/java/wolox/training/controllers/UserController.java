@@ -32,7 +32,7 @@ public class UserController {
 	@Autowired
 	private BookRepository bookRepository;
 	
-	@GetMapping("/all")
+	@GetMapping
 	public Iterable<User> findAll() {
 		System.out.println("En UserController -> findAll");
 		return userRepository.findAll(); 
@@ -44,7 +44,8 @@ public class UserController {
 				.orElseThrow(() -> new UserNotFoundException("No se encontro el usuario de id=" + id.toString()));
 	}
 	
-	@GetMapping	
+	@GetMapping
+	@RequestMapping(params = "userName")
 	public User findByUserName(@RequestParam(name = "userName", required = true) String userName) {
 		return userRepository.findFirstByUserName(userName)
 					.orElseThrow(() -> new UserNotFoundException("No existe el usuario con userName=" + userName));
@@ -85,7 +86,7 @@ public class UserController {
 					.orElseThrow(() -> new UserNotFoundException("No existe el usuarios de id=" + userId.toString()));
 		Book book = bookRepository.findById(bookId)
 				.orElseThrow(() -> new BookNotFoundException("No existe el libro de id=" + bookId.toString()));
-		user.agregarLibro(book);		
+		user.addBook(book);		
 		return userRepository.save(user);
 	}
 
@@ -96,7 +97,7 @@ public class UserController {
 				.orElseThrow(() -> new UserNotFoundException("No existe el usuarios de id=" + userId.toString()));
 		Book book = bookRepository.findById(bookId)
 				.orElseThrow(() -> new BookNotFoundException("No existe el libro de id=" + bookId.toString()));		
-		user.eliminarLibro(book);
+		user.removeBook(book);
 		return userRepository.save(user);
 	}
 	

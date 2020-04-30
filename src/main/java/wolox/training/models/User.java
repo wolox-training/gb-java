@@ -15,7 +15,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
-
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
 
 import wolox.training.exceptions.BookAlreadyOwnedException;
 
@@ -27,12 +28,14 @@ public class User {
 	private long id;
 
 	@NotNull
+	@Size(min = 6, message="Debe ser de al menos 6 caracteres de longitud")
 	private String userName;
 	
 	@NotNull
 	private String name;
 	
 	@NotNull
+	@Past(message = "No puede ser una fecha futura!")
 	private LocalDate birthDate;
 	
 	@ManyToMany(cascade={CascadeType.REFRESH, CascadeType.MERGE})
@@ -85,7 +88,7 @@ public class User {
 		this.birthDate = birthDate;
 	}
 	
-	public List<Book> agregarLibro(Book userBook) throws BookAlreadyOwnedException {
+	public List<Book> addBook(Book userBook) throws BookAlreadyOwnedException {
 		if (books.contains(userBook)) {
 			throw new BookAlreadyOwnedException();
 		} else {
@@ -94,7 +97,7 @@ public class User {
 		return (List<Book>) Collections.unmodifiableList(books);
 	}
 	
-	public void eliminarLibro(Book userBook) {
+	public void removeBook(Book userBook) {
 		this.books.remove(userBook);
 	}
 	
