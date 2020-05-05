@@ -1,7 +1,7 @@
 package wolox.training.controllers;
 
-import static org.mockito.Mockito.when;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.ArgumentMatchers.any;
 import static org.hamcrest.Matchers.hasSize;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -99,18 +99,16 @@ public class BookControllerTest {
 	}
 	
 	@Test
-	public void WhenPostBook_ThenReturnHttpStatusCREATED() throws Exception {		
-		Book book = new Book("Crime", "Jeff Lindsay", "ImageDexter1", "Darkly Dreaming Dexter", "", "Umbriel", "2004",
-		        304, "9780752866765");		
-		given(repo.save(book)).willReturn(book);
-		mockMvc.perform(post("/api/books")
-				.content(asJsonString(book))
+	public void WhenPostBook_ThenReturnHttpStatusCREATED() throws Exception {
+		Book bookTDVC = new Book("Thriller","Dan Brown","ImageRL2","The Da Vinci Code","","Scribner","2003",689,"9780307474278");		
+		given(repo.save(any())).willReturn(bookTDVC);
+		mockMvc.perform(post("/api/books")				
 				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON))
-				.andDo(print())
-				.andExpect(status().isCreated())
-				.andExpect(MockMvcResultMatchers.jsonPath("$.isbn").exists());
-				
+				.characterEncoding("UTF-8")
+				.content(asJsonString(bookTDVC)))
+					.andDo(print())				
+					.andExpect(status().isCreated())
+					.andExpect(MockMvcResultMatchers.jsonPath("$.isbn").exists());
 	}
 
 	public static String asJsonString(final Object obj) {
