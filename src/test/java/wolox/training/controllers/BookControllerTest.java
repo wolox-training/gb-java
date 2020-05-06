@@ -1,5 +1,6 @@
 package wolox.training.controllers;
 
+
 import static org.mockito.BDDMockito.given;
 import static org.mockito.ArgumentMatchers.any;
 import static org.hamcrest.Matchers.hasSize;
@@ -17,27 +18,26 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
 
 
 import wolox.training.models.Book;
 import wolox.training.repositories.BookRepository;
 
-@RunWith(SpringRunner.class)
+
 @WebMvcTest(BookController.class)
 public class BookControllerTest {
 
@@ -47,11 +47,12 @@ public class BookControllerTest {
 	@MockBean
 	private BookRepository repo;
 
-	@Before
-	public void init() {
+	@BeforeAll
+	public static void init() {
 	}
 	
 	@Test
+	@Order(1)
 	public void GivenBooks_WhenGetBooks_ThenReturnJsonArray() throws Exception {
 		Book book1 = new Book("Crime", "Jeff Lindsay", "ImageDexter1", "Darkly Dreaming Dexter", "", "Umbriel", "2004",
 		        304, "9780752866765");
@@ -72,6 +73,7 @@ public class BookControllerTest {
 	}
 
 	@Test
+	@Order(2)
 	public void GivenBooks_WhenGetBookByTitle_ThenReturnJsonBook() throws Throwable {
 		Book book = new Book("Crime", "Jeff Lindsay", "ImageDexter1", "Darkly Dreaming Dexter", "", "Umbriel", "2004",
 		        304, "9780752866765");
@@ -86,6 +88,7 @@ public class BookControllerTest {
 	}
 
 	@Test
+	@Order(3)
 	public void GivenBooks_WhenGetBookById_ThenReturnJsonBook() throws Exception {
 		Book book = new Book("Crime", "Jeff Lindsay", "ImageDexter1", "Darkly Dreaming Dexter", "", "Umbriel", "2004",
 		        304, "9780752866765");
@@ -99,6 +102,7 @@ public class BookControllerTest {
 	}
 	
 	@Test
+	@Order(5)
 	public void WhenPostBook_ThenReturnHttpStatusCREATED() throws Exception {
 		Book bookTDVC = new Book("Thriller","Dan Brown","ImageRL2","The Da Vinci Code","","Scribner","2003",689,"9780307474278");		
 		given(repo.save(any())).willReturn(bookTDVC);
@@ -110,7 +114,57 @@ public class BookControllerTest {
 					.andExpect(status().isCreated())
 					.andExpect(MockMvcResultMatchers.jsonPath("$.isbn").exists());
 	}
+	
+	@Test
+	@Order(5)
+	public void WhenDeleteBook_ThenReturnHttpStatusOK( ) throws Exception {
+		Book bookTDVC = new Book("Thriller","Dan Brown","ImageRL2","The Da Vinci Code","","Scribner","2003",689,"9780307474278");		
+		given(repo.findById(any())).willReturn(Optional.of(bookTDVC));
+		mockMvc.perform(delete("/api/books/1"))				
+					.andDo(print())				
+					.andExpect(status().isOk())					
+					.andExpect(jsonPath("$").doesNotExist());
+	}	
+	
+	@Test
+	@Order(6)
+	public void WhenDeleteBook_ThenReturnHttpStatusNOT_FOUND( ) throws Exception {		
+		given(repo.findById(any())).willReturn(Optional.empty());
+		mockMvc.perform(delete("/api/books/1"))
+			.andDo(print())
+			.andExpect(status().isNotFound())
+			.andExpect(content().string("No existe el libro de id=1"));
+	}	
+	
+	@Test
+	@Order(7)
+	public void WhenPutBook_ThenReturnHttpStatusOK( ) throws Exception {		
+		Book bookTDVC = new Book("Thriller","Dan Brown","ImageRL2","The Da Vinci Code","","Scribner","2003",689,"9780307474278");
+		Book bookTDVCmod = new Book("Thriller","Dan Brown","ImageRL2","The Da Vinci Code","modified","Scribner","2003",689,"9780307474278");
+		given(repo.findById(any())).willReturn(Optional.of(bookTDVC));
+		given(repo.save(any())).willReturn(bookTDVCmod);
+		mockMvc.perform(put("/api/books/0")
+					.contentType(MediaType.APPLICATION_JSON)
+					.characterEncoding("UTF-8")
+					.content(asJsonString(bookTDVCmod)))
+						.andDo(print())
+						.andExpect(status().isOk())						
+						.andExpect(MockMvcResultMatchers.jsonPath("$.subtitle").value("modified"));				
+	}	
 
+	@Test
+	@Order(8)
+	public void WhenPutBook_ThenReturnHttpStatusBAD_REQUEST( ) throws Exception {
+		Book bookTDVC = new Book("Thriller","Dan Brown","ImageRL2","The Da Vinci Code","","Scribner","2003",689,"9780307474278");
+		mockMvc.perform(put("/api/books/1")
+				.contentType(MediaType.APPLICATION_JSON)
+				.characterEncoding("UTF-8")
+				.content(asJsonString(bookTDVC)))
+					.andDo(print())
+					.andExpect(status().isBadRequest())
+					.andExpect(content().string("Id invalido"));		
+	}
+	
 	public static String asJsonString(final Object obj) {
 	    try {
 	        return new ObjectMapper().writeValueAsString(obj);
