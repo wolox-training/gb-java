@@ -4,23 +4,25 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.junit4.SpringRunner;
+
 
 import wolox.training.models.Book;
 
-@RunWith(SpringRunner.class)
 @DataJpaTest
 public class BookRepositoryTest {
 
 	@Autowired
 	private BookRepository bookRepository;
 
-	@Before
+	@BeforeAll
 	public void init() {
 		Book book1 = new Book("Crime", "Jeff Lindsay", "ImageDexter1", "Darkly Dreaming Dexter", "", "Umbriel", "2004",
 		        304, "9780752866765");
@@ -34,6 +36,7 @@ public class BookRepositoryTest {
 	}
 
 	@Test
+	@Order(1)
 	public void Given_loaded_repositoryWhen_search_all_booksThen_find_3_books() {
 		Iterable<Book> books = bookRepository.findAll();
 		int nOfBooks = 3;
@@ -41,6 +44,7 @@ public class BookRepositoryTest {
 	}
 
 	@Test
+	@Order(2)
 	public void Given_loaded_repositoryWhen_search_author_Jeff_LindsayThen_find_book_of_isbn_9780345802590() {
 		String author = "Jeff Lindsay";
 		Book foundedBook = bookRepository.findFirstByAuthorOrderByYearDesc(author).orElse(new Book());
@@ -48,6 +52,7 @@ public class BookRepositoryTest {
 	}
 
 	@Test
+	@Order(3)
 	public void Given_loaded_repositoryWhen_search_an_existent_authorThen_find_first_book_of_author_ordered_by_year() {
 		String author = "Jeff Lindsay";
 		Book foundedBook = bookRepository.findFirstByAuthorOrderByYear(author).orElse(new Book());
@@ -55,12 +60,14 @@ public class BookRepositoryTest {
 	}
 
 	@Test
+	@Order(4)
 	public void Given_loaded_repositoryWhen_search_a_non_existent_authorThen_not_find_books() {
 		String author = "Dan Brown";
 		assertThat(!bookRepository.findFirstByAuthorOrderByYearDesc(author).isPresent());
 	}
 
 	@Test
+	@Order(5)
 	public void Given_loaded_repositoryWhen_search_all_book_of_an_authorThen_find_2_books_ordered_by_year() {
 		String author = "Jeff Lindsay";
 		List<Book> bookList = bookRepository.findByAuthorOrderByYear(author);
@@ -68,12 +75,14 @@ public class BookRepositoryTest {
 	}
 
 	@Test
+	@Order(6)
 	public void Given_loaded_repositoryWhen_search_by_title_Then_find_a_book() {
 		Book foundedBook = bookRepository.findByTitle("The Analyst").orElse(new Book());
 		assertThat("9780552150217".equals(foundedBook.getIsbn()));
 	}
 
 	@Test
+	@Order(7)
 	public void Given_loaded_repositoryWhen_search_a_non_existent_titleThen_not_find_a_book() {
 		String searchedTitle = "IT";
 		assertThat(!bookRepository.findByTitle(searchedTitle).isPresent());
