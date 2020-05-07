@@ -1,6 +1,5 @@
 package wolox.training.controllers;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,38 +24,38 @@ public class BookController {
 
 	@Autowired
 	private BookRepository bookRepository;
-	
+
 	@GetMapping("/all")
 	public Iterable<Book> findAll() {
 		System.out.println("En BookController -> findAll");
-		return bookRepository.findAll(); 
+		return bookRepository.findAll();
 	}
 
 	@GetMapping
 	@RequestMapping(params = "title")
-	public Book findByTitle(@RequestParam(name = "title", required = true) String title) {				
+	public Book findByTitle(@RequestParam(name = "title", required = true) String title) {
 		return bookRepository.findByTitle(title)
-				.orElseThrow(() -> new BookNotFoundException("No se encontro libro de titulo " + title));
+		        .orElseThrow(() -> new BookNotFoundException("No se encontro libro de titulo " + title));
 	}
-	
-	@GetMapping("/{id}")	
+
+	@GetMapping("/{id}")
 	public Book findOne(@PathVariable(required = true) Long id) {
 		return bookRepository.findById(id)
-				.orElseThrow(() -> new BookNotFoundException("No se encontro libro " + id.toString()));
+		        .orElseThrow(() -> new BookNotFoundException("No se encontro libro " + id.toString()));
 	}
-	
+
 	@GetMapping
 	@RequestMapping(params = "author")
 	public Book findByAuthor(@RequestParam(name = "author", required = true) String author) {
 		System.out.println("En BookController -> findByAuthor");
-		//Sorting with a Sort Parameter 
+		// Sorting with a Sort Parameter
 		/*
-		Sort sortByYear = Sort.by("year").descending();
-		Book book bookRepository.findByAuthorAndSort(author, sortByYear);
+		 * Sort sortByYear = Sort.by("year").descending(); Book book
+		 * bookRepository.findByAuthorAndSort(author, sortByYear);
 		 */
-		//Sorting With the OrderBy Method Keyword				
+		// Sorting With the OrderBy Method Keyword
 		return bookRepository.findFirstByAuthorOrderByYear(author)
-					.orElseThrow(() -> new BookNotFoundException("No se encontro el ultimo libro del autor " + author));
+		        .orElseThrow(() -> new BookNotFoundException("No se encontro el ultimo libro del autor " + author));
 	}
 
 	@PostMapping
@@ -65,16 +64,16 @@ public class BookController {
 		System.out.println("En BookController -> createBook");
 		return bookRepository.save(book);
 	}
-	
+
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public void deleteBook(@PathVariable(required = true) Long id) {
 		System.out.println("En BookController -> deleteBook (id=" + id.toString() + ")");
 		bookRepository.findById(id)
-			.orElseThrow(() -> new BookNotFoundException("No existe el libro de id=" + id.toString()));
+		        .orElseThrow(() -> new BookNotFoundException("No existe el libro de id=" + id.toString()));
 		bookRepository.deleteById(id);
 	}
-	 
+
 	@PutMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public Book updateBook(@RequestBody Book book, @PathVariable Long id) {
@@ -83,8 +82,8 @@ public class BookController {
 			throw new BookIdMismatchException("Id invalido");
 		}
 		bookRepository.findById(id)
-			.orElseThrow(() -> new BookNotFoundException("No existe el libro de id=" + id.toString()));
+		        .orElseThrow(() -> new BookNotFoundException("No existe el libro de id=" + id.toString()));
 		return bookRepository.save(book);
 	}
-	
+
 }
