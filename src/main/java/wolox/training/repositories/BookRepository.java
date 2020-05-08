@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import javax.validation.constraints.NotBlank;
 
-import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.CrudRepository;
 
 import wolox.training.models.Book;
@@ -29,4 +28,10 @@ public interface BookRepository extends CrudRepository<Book, Long> {
     List<Book> findByAuthorOrderByYear(@NotBlank String author);
     //Consulta de libro por titulo
     Optional<Book> findByTitle(@NotBlank String title);
+    /**
+     * Consulta de libro por isbn, devuelve el primero si hay varios
+     * @param isbn
+     * @return Optional<Book>
+     */
+    Optional<Book> findFirstByIsbn(@NotBlank String isbn);
 }

@@ -2,6 +2,7 @@ package wolox.training.models;
 
 import java.util.List;
 import javax.validation.constraints.NotNull;
+import com.google.common.base.Preconditions;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -108,20 +109,24 @@ public class Book {
 	public String getYear() {
 		return year;
 	}
-
-	public void setAuthor(String author) {
+	
+	public void setAuthor(String author) {		
+		Preconditions.checkArgument(!author.isEmpty() , "Author must be informed", author);		
 		this.author = author;
 	}
 
 	public void setGenre(String genre) {
+		Preconditions.checkNotNull(genre, "Genre must not be null");
 		this.genre = genre;
 	}
 
 	public void setImage(String image) {
+		Preconditions.checkNotNull(image, "Image must not be null");
 		this.image = image;
 	}
 
 	public void setIsbn(String isbn) {
+		Preconditions.checkArgument(!isbn.isEmpty() , "ISBN must be informed", isbn);
 		this.isbn = isbn;
 	}
 
@@ -130,14 +135,17 @@ public class Book {
 	}
 
 	public void setPublisher(String publisher) {
+		Preconditions.checkNotNull(publisher, "Publisher must not be null");
 		this.publisher = publisher;
 	}
-
+	
 	public void setSubtitle(String subtitle) {
+		Preconditions.checkNotNull(subtitle, "Subtitle must not be null");
 		this.subtitle = subtitle;
 	}
 
 	public void setTitle(String title) {
+		Preconditions.checkArgument(!title.isEmpty() , "Title must be informed", title);
 		this.title = title;
 	}
 
@@ -145,7 +153,8 @@ public class Book {
 		this.users = users;
 	}
 
-	public void setYear(String year) {
+	public void setYear(String year) {		
+		Preconditions.checkArgument(!year.isEmpty() , "Title must be informed", year);
 		this.year = year;
 	}
 

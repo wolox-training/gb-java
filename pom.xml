@@ -65,6 +65,14 @@
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
 		<!-- end::template engine thymeleaf -->
+		<!-- tag::guava -->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>27.0-jre</version>		
+		</dependency>
+		<!-- end::guava -->
+		
 	</dependencies>
 	<build>
 		<plugins>
