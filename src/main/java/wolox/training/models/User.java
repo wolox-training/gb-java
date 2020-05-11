@@ -52,7 +52,7 @@ public class User {
 		super();
 		this.userName = userName;
 		this.name = name;
-		this.birthDate = birthDate;		
+		this.birthDate = birthDate;
 	}
 	
 	public Long getId() {
