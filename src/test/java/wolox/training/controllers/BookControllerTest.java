@@ -177,9 +177,9 @@ public class BookControllerTest {
 		OpenLibraryBook openLibraryBook = new OpenLibraryBook("A feast for crows", "", Arrays.asList(new PublisherDTO("Bantam Books"))
 				,"2005", 753, Arrays.asList(new AuthorDTO("","George R.R. Martin"))
 				,new CoverDTO("","","https://covers.openlibrary.org/b/id/8745184-L.jpg")
-				,Arrays.asList( new SubjectDTO("","Fantasy fiction")));
-		given(openLibraryService.bookInfo(any())).willReturn(Optional.of(openLibraryBook));		
+				,Arrays.asList( new SubjectDTO("","Fantasy fiction")));				
 		Book book = new Book("Fantasy fiction","George R.R. Martin","https://covers.openlibrary.org/b/id/8745184-L.jpg","A feast for crows","","Bantam Books","2005",753,"0553801503");
+		given(openLibraryService.bookInfo(any())).willReturn(Optional.of(book));
 		given(repo.save(any())).willReturn(book);
 		mockMvc.perform( MockMvcRequestBuilders
 			    	.get("/api/books/")

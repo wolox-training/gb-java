@@ -74,20 +74,9 @@ public class BookController {
 	public ResponseEntity<Book> findByIsbn(@RequestParam(name = "isbn", required = true) String isbn) {
 		Optional<Book> optionalBook = bookRepository.findFirstByIsbn(isbn);
 		if (!optionalBook.isPresent()) {
-			OpenLibraryBook openLibraryBook = openLibraryService.bookInfo(isbn)
+			Book book = openLibraryService.bookInfo(isbn)
 					.orElseThrow(() -> new BookNotFoundException("No se encontro libro con isbn=" + isbn ));			
-			Book book = new Book();
-			book.setIsbn(isbn);
-			book.setTitle(openLibraryBook.getTitle());			
-			book.setSubtitle(Optional.ofNullable(openLibraryBook.getSubtitle()).orElse(""));				
-			book.setGenre(Optional.ofNullable(openLibraryBook.getSubjects().get(0).getName()).orElse(""));
-			book.setPages(openLibraryBook.getNumberOfPages()); 
-			book.setPublisher(Optional.ofNullable(openLibraryBook.getPublishers().get(0).getName()).orElse(""));
-			book.setYear(Optional.ofNullable(openLibraryBook.getPublishDate()).orElse(""));
-			book.setImage(Optional.ofNullable(openLibraryBook.getCover().getLarge()).orElse(""));			
-			book.setAuthor(openLibraryBook.getAuthors().get(0).getName());			
 			return new ResponseEntity<Book>(bookRepository.save(book), HttpStatus.CREATED);
-
 		} else {
 			return new ResponseEntity<Book>(optionalBook.get(), HttpStatus.OK);
 		}
