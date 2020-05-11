@@ -21,7 +21,6 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -29,13 +28,16 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-
+import wolox.training.dtos.AuthorDTO;
+import wolox.training.dtos.CoverDTO;
+import wolox.training.dtos.OpenLibraryBook;
+import wolox.training.dtos.PublisherDTO;
+import wolox.training.dtos.SubjectDTO;
 import wolox.training.models.Book;
 import wolox.training.repositories.BookRepository;
+import wolox.training.services.OpenLibraryService;
 
 
 @WebMvcTest(BookController.class)
@@ -46,6 +48,9 @@ public class BookControllerTest {
 
 	@MockBean
 	private BookRepository repo;
+	
+	@MockBean
+	private OpenLibraryService openLibraryService;
 
 	@BeforeAll
 	public static void init() {
@@ -162,7 +167,43 @@ public class BookControllerTest {
 				.content(asJsonString(bookTDVC)))
 					.andDo(print())
 					.andExpect(status().isBadRequest())
-					.andExpect(content().string("Id invalido"));		
+					.andExpect(content().string("Id invalido"));
+	}
+
+	@Test
+	@Order(9)
+	public void WhenGetBookByIsbnAndNotExist_ThenSaveNewBookAndReturnJsonBook() throws Exception {
+		given(repo.findFirstByIsbn(any())).willReturn(Optional.empty());
+		OpenLibraryBook openLibraryBook = new OpenLibraryBook("A feast for crows", "", Arrays.asList(new PublisherDTO("Bantam Books"))
+				,"2005", 753, Arrays.asList(new AuthorDTO("","George R.R. Martin"))
+				,new CoverDTO("","","https://covers.openlibrary.org/b/id/8745184-L.jpg")
+				,Arrays.asList( new SubjectDTO("","Fantasy fiction")));				
+		Book book = new Book("Fantasy fiction","George R.R. Martin","https://covers.openlibrary.org/b/id/8745184-L.jpg","A feast for crows","","Bantam Books","2005",753,"0553801503");
+		given(openLibraryService.bookInfo(any())).willReturn(Optional.of(book));
+		given(repo.save(any())).willReturn(book);
+		mockMvc.perform( MockMvcRequestBuilders
+			    	.get("/api/books/")
+			    	.param("isbn", "0553801503")
+			    	.accept(MediaType.APPLICATION_JSON)
+			    	.characterEncoding("UTF-8"))
+						.andDo(print())
+						.andExpect(status().isCreated())
+						.andExpect(MockMvcResultMatchers.jsonPath("$.author").value("George R.R. Martin"));
+	}
+
+	@Test
+	@Order(10)
+	public void WhenGetBookByIsbnAndNotExistInBaseAndInOpenLibrayAPI_ThenReturnHttpStatusNOT_FOUND() throws Exception {
+		given(repo.findFirstByIsbn(any())).willReturn(Optional.empty());
+		given(openLibraryService.bookInfo(any())).willReturn(Optional.empty());				
+		mockMvc.perform( MockMvcRequestBuilders
+			    	.get("/api/books/")
+			    	.param("isbn", "0553801503")
+			    	.accept(MediaType.APPLICATION_JSON)
+			    	.characterEncoding("UTF-8"))
+						.andDo(print())
+						.andExpect(status().isNotFound())
+						.andExpect(content().string("No se encontro libro con isbn=0553801503"));						
 	}
 	
 	public static String asJsonString(final Object obj) {
