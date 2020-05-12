@@ -56,26 +56,21 @@ public class BookControllerTest {
 	public static void init() {
 	}
 	
-	@Test
-	@Order(1)
-	public void GivenBooks_WhenGetBooks_ThenReturnJsonArray() throws Exception {
-		Book book1 = new Book("Crime", "Jeff Lindsay", "ImageDexter1", "Darkly Dreaming Dexter", "", "Umbriel", "2004",
-		        304, "9780752866765");
-		Book book2 = new Book("Crime", "Jeff Lindsay", "ImageDexter8", "Dexter Is Dead", "", "Umbriel", "2016", 304,
-		        "9780345802590");
-		Book book3 = new Book("Mystery", "John Katzenbach", "ImageAnalyst", "The Analyst", "", "Corgi", "2002", 491,
-		        "9780552150217");
-		List<Book> allBooks = Arrays.asList(book1, book2, book3);		
-		//when(repo.findAll()).thenReturn(allBooks);
-		given(repo.findAll()).willReturn(allBooks);
-		mockMvc.perform(get("/api/books/all"))
-				.andDo(print())
-				.andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-		        .andExpect(jsonPath("$[0].isbn").value("9780752866765"))
-				.andExpect(jsonPath("$", hasSize(3)));
-		
-	}
+    @Test
+    @Order(1)
+    public void Given3BooksInDatabase_WhenGetAllBooksWithNullParams_ThenReturnAJsonArrayOf3Books() throws Exception {
+        Book book1 = new Book("Crime","Jeff Lindsay","ImageDexter1","Darkly Dreaming Dexter","","Umbriel","2004",304,"9780752866765");
+        Book book2 = new Book("Crime","Jeff Lindsay","ImageDexter8","Dexter Is Dead","","Umbriel","2016", 304,"9780345802590");
+        Book book3 = new Book("Mystery","John Katzenbach","ImageAnalyst","The Analyst","","Corgi","2002",491,"9780552150217");
+        List<Book> allBooks = Arrays.asList(book1, book2, book3);       
+        given(repo.findAllFiltered(null, null, null, null, null, null)).willReturn(allBooks);
+        mockMvc.perform(get("/api/books/all"))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$[0].isbn").value("9780752866765"))
+                    .andExpect(jsonPath("$", hasSize(3)));          
+    }
 
 	@Test
 	@Order(2)
@@ -206,24 +201,8 @@ public class BookControllerTest {
 						.andExpect(content().string("No se encontro libro con isbn=0553801503"));						
 	}
 	
-	@Test
-	@Order(11)
-	public void Given3BooksInDatabase_WhenGetAllBooksWithNullParams_ThenReturnAJsonArrayOf3Books() throws Exception {
-	    Book book1 = new Book("Crime","Jeff Lindsay","ImageDexter1","Darkly Dreaming Dexter","","Umbriel","2004",304,"9780752866765");
-	    Book book2 = new Book("Crime","Jeff Lindsay","ImageDexter8","Dexter Is Dead","","Umbriel","2016", 304,"9780345802590");
-	    Book book3 = new Book("Mystery","John Katzenbach","ImageAnalyst","The Analyst","","Corgi","2002",491,"9780552150217");
-	    List<Book> allBooks = Arrays.asList(book1, book2, book3);	    
-	    given(repo.findAllFiltered(null, null, null, null, null, null)).willReturn(allBooks);
-	    mockMvc.perform(get("/api/books/all"))
-	                .andDo(print())
-	                .andExpect(status().isOk())
-	                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-	                .andExpect(jsonPath("$[0].isbn").value("9780752866765"))
-	                .andExpect(jsonPath("$", hasSize(3)));	        
-	}
-
     @Test
-    @Order(12)
+    @Order(11)
     public void Given3BooksInDatabase_WhenGetAllBooksWithDexterAsTittleParam_ThenReturnAJsonArrayOf2Books() throws Exception {
         Book book1 = new Book("Crime","Jeff Lindsay","ImageDexter1","Darkly Dreaming Dexter","","Umbriel","2004",304,"9780752866765");
         Book book2 = new Book("Crime","Jeff Lindsay","ImageDexter8","Dexter Is Dead","","Umbriel","2016", 304,"9780345802590");

@@ -35,16 +35,8 @@ public class BookController {
 	
 	@Autowired
 	private OpenLibraryService openLibraryService;
-
-	/*
-	@GetMapping("/all")
-	public Iterable<Book> findAll() {
-		log.info("En BookController -> findAll");
-		return bookRepository.findAll();
-	}
-	*/
 	
-	@GetMapping("/all")	
+	@GetMapping("/all")	 
     public Iterable<Book> findAllFiltered(@RequestParam(name = "title", required = false) String title
                                 ,@RequestParam(name = "subtitle", required = false) String subtitle
                                 ,@RequestParam(name = "author", required = false) String author
