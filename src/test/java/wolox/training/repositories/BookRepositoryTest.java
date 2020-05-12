@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +21,7 @@ public class BookRepositoryTest {
 	@Autowired
 	private BookRepository bookRepository;
 
-	@BeforeAll
+	@BeforeEach
 	public void init() {
 		Book book1 = new Book("Crime", "Jeff Lindsay", "ImageDexter1", "Darkly Dreaming Dexter", "", "Umbriel", "2004",
 		        304, "9780752866765");
@@ -84,7 +85,13 @@ public class BookRepositoryTest {
 	public void Given_loaded_repositoryWhen_search_a_non_existent_titleThen_not_find_a_book() {
 		String searchedTitle = "IT";
 		assertThat(!bookRepository.findByTitle(searchedTitle).isPresent());
-
 	}
+	
+	@Test
+    @Order(7)
+    public void GivenLoadedRepository_WhenUseNullPamars_ThenABook() {
+        List<Book> bookList = bookRepository.findBookByPublisherAndGenreAndYear(null,null,"2016");        
+        assertThat(bookList).hasSize(1);
+    }
 
 }
