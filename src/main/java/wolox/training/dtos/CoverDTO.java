@@ -5,6 +5,9 @@ public class CoverDTO {
 	private String large;
 	private String medium;	
 	
+	public CoverDTO() {	    
+	}
+	
 	public CoverDTO(String small, String medium, String large) {
 		this.small = small;		
 		this.medium = medium;

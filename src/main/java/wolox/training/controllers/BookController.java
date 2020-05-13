@@ -35,12 +35,18 @@ public class BookController {
 	
 	@Autowired
 	private OpenLibraryService openLibraryService;
-
-	@GetMapping("/all")
-	public Iterable<Book> findAll() {		
-		log.info("En BookController -> findAll");
-		return bookRepository.findAll();
+	
+	@GetMapping("/all")	 
+    public Iterable<Book> findAllFiltered(@RequestParam(name = "title", required = false) String title
+                                ,@RequestParam(name = "subtitle", required = false) String subtitle
+                                ,@RequestParam(name = "author", required = false) String author
+                                ,@RequestParam(name = "year", required = false) String year
+                                ,@RequestParam(name = "publisher", required = false) String publisher
+                                ,@RequestParam(name = "genre", required = false) String genre) {
+	        log.info("En BookController -> findAllFiltered");
+	        return bookRepository.findAllFiltered(publisher, genre, year, author, title, subtitle);
 	}
+	
 
 	@GetMapping
 	@RequestMapping(params = "title")

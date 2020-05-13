@@ -13,15 +13,14 @@ public class OpenLibraryBook implements Serializable {
 
 	private String title;
 	private String subtitle;
-	private List<PublisherDTO> publishers;	
+	private List<PublisherDTO> publishers;
 	private String publishDate;
 	private int numberOfPages;
 	private List<AuthorDTO> authors;
 	private CoverDTO cover;
 	private List<SubjectDTO> subjects;
 	
-	public OpenLibraryBook() {
-		
+	public OpenLibraryBook() {		
 	}
 	
 	public OpenLibraryBook(String title, String subtitle, List<PublisherDTO> publishers,

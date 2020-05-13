@@ -41,9 +41,9 @@ public class UserRepositoryTest {
 
 	@Test
 	@Order(1)
-	public void Given_loaded_repositoryWhen_search_all_usersThen_find_4_users() {
+	public void Given_loaded_repositoryWhen_search_all_usersThen_find_5_users() {
 		Iterable<User> users = userRepository.findAll();	
-		int nOfUsers = 4;
+		int nOfUsers = 5;
 		assertThat(users).hasSize(nOfUsers);
 	}
 	

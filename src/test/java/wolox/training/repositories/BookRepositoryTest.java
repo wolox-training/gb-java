@@ -94,4 +94,18 @@ public class BookRepositoryTest {
         assertThat(bookList).hasSize(1);
     }
 
+	@Test
+	@Order(8)
+	public void GivenLoadedRepository_WhenGetAllBooksUsingAllNullParams_ThenReturn3Books() {
+	    List<Book> bookList = bookRepository.findAllFiltered(null, null, null, null, null, null);
+	    assertThat(bookList).hasSize(3);
+	}
+	
+	@Test
+	@Order(9)
+    public void GivenLoadedRepository_WhenGetAllBooksPassingPartOfATittleParam_ThenReturn2Book() {
+	    List<Book> bookList = bookRepository.findAllFiltered(null, null, null, null, "dexter", null);
+	    assertThat(bookList).hasSize(2);
+	}
+	
 }
