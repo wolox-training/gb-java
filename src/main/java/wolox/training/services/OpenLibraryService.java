@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.jboss.logging.Logger;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -17,6 +19,7 @@ import wolox.training.models.Book;
 @Service
 public class OpenLibraryService {
 
+	Gson gson = new GsonBuilder().setPrettyPrinting().create();
 	private Logger log = Logger.getLogger(OpenLibraryService.class);
 
 	public Optional<Book> bookInfo(String isbn) {
@@ -26,7 +29,7 @@ public class OpenLibraryService {
 		params.put("isbn", isbn);
 		log.info("Try to do a GET request to Open Library");
 		log.info(" URL -> " + openlibraryResourceUrl);
-		log.info(" params : " + params.toString());
+		log.info(" params : \n" + gson.toJson(params));
 		Map<String, OpenLibraryBook> response = restTemplate.exchange(openlibraryResourceUrl, HttpMethod.GET, null,
 				new ParameterizedTypeReference<Map<String, OpenLibraryBook>>() { }, params).getBody();
 		Optional<OpenLibraryBook> optionalOpenLibraryBook = Optional.ofNullable(response.get("ISBN:" + isbn));		

@@ -28,7 +28,7 @@ import wolox.training.services.OpenLibraryService;
 @RestController
 @RequestMapping("/api/books")
 public class BookController {
-	private Logger log = Logger.getLogger(TrainingApplication.class);
+	private Logger log = Logger.getLogger(BookController.class);
 	
 	@Autowired
 	private BookRepository bookRepository;
@@ -78,8 +78,11 @@ public class BookController {
 	@GetMapping
 	@RequestMapping(params = "isbn")
 	public ResponseEntity<Book> findByIsbn(@RequestParam(name = "isbn", required = true) String isbn) {
+		log.info("Receive a GET request to find Book by isbn " + isbn);
+
 		Optional<Book> optionalBook = bookRepository.findFirstByIsbn(isbn);
 		if (!optionalBook.isPresent()) {
+			log.info("Book with isbn don't exist in local DB");
 			Book book = openLibraryService.bookInfo(isbn)
 					.orElseThrow(() -> new BookNotFoundException("No se encontro libro con isbn=" + isbn ));			
 			return new ResponseEntity<Book>(bookRepository.save(book), HttpStatus.CREATED);
