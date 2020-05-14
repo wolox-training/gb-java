@@ -72,6 +72,12 @@
 			<version>27.0-jre</version>		
 		</dependency>
 		<!-- end::guava -->
+
+		<dependency>
+			<artifactId>gson</artifactId>
+			<groupId>com.google.code.gson</groupId>
+			<version>2.8.6</version>
+		</dependency>
 		
 	</dependencies>
 	<build>

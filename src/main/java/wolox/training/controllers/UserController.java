@@ -1,5 +1,8 @@
 package wolox.training.controllers;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import wolox.training.TrainingApplication;
 import wolox.training.exceptions.BookNotFoundException;
 import wolox.training.exceptions.UserIdMismatchException;
 import wolox.training.exceptions.UserNotFoundException;
@@ -24,8 +28,11 @@ import wolox.training.repositories.UserRepository;
 
 @RestController
 @RequestMapping("/api/users")
-public class UserController {	
-	
+public class UserController {
+
+	Gson gson = new GsonBuilder().setPrettyPrinting().create();
+	private Logger log = Logger.getLogger(UserController.class);
+
 	@Autowired
 	private UserRepository userRepository;	
 	
@@ -40,24 +47,30 @@ public class UserController {
 
 	@GetMapping("/{id}")
 	public User findOne(@PathVariable(required = true) Long id) {
+		log.info("Receive a GET request to find User  with id " + id );
 		return userRepository.findById(id)
-				.orElseThrow(() -> new UserNotFoundException("No se encontro el usuario de id=" + id.toString()));
-	}
-	
-	@GetMapping
-	@RequestMapping(params = "userName")
-	public User findByUserName(@RequestParam(name = "userName", required = true) String userName) {
-		return userRepository.findFirstByUserName(userName)
-					.orElseThrow(() -> new UserNotFoundException("No existe el usuario con userName=" + userName));
+				.orElseThrow(() -> {
+					log.error("No se encontro el usuario de id = " + id.toString());
+					return new UserNotFoundException("No se encontro el usuario de id=" + id.toString());
+				});
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public User createUser(@RequestBody User user) {
-		System.out.println("En UserController -> createUser");
+		log.info("Receive a POST request to create User ");
+		log.info("Body :\n" + gson.toJson(user));
 		return userRepository.save(user);
 	}
-	
+
+	@GetMapping
+	@RequestMapping(params = "userName")
+	public User findByUserName(@RequestParam(name = "userName", required = true) String userName) {
+		return userRepository.findFirstByUserName(userName)
+				.orElseThrow(() -> new UserNotFoundException("No existe el usuario con userName=" + userName));
+	}
+
+
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public void deleteUser(@PathVariable(required = true) Long id) {

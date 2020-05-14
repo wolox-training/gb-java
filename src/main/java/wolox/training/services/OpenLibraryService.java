@@ -1,24 +1,34 @@
 package wolox.training.services;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import org.jboss.logging.Logger;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import wolox.training.TrainingApplication;
 import wolox.training.dtos.OpenLibraryBook;
 import wolox.training.models.Book;
 
 @Service
 public class OpenLibraryService {
 
+	private Logger log = Logger.getLogger(OpenLibraryService.class);
+
 	public Optional<Book> bookInfo(String isbn) {
 		RestTemplate restTemplate = new RestTemplate();		
-		String openlibraryResourceUrl = "https://openlibrary.org/api/books?bibkeys=ISBN:{isbn}&format=json&jscmd=data";		
+		String openlibraryResourceUrl = "https://openlibrary.org/api/books?bibkeys=ISBN:{isbn}&format=json&jscmd=data";
+		HashMap<String, String> params = new HashMap<>();
+		params.put("isbn", isbn);
+		log.info("Try to do a GET request to Open Library");
+		log.info(" URL -> " + openlibraryResourceUrl);
+		log.info(" params : " + params.toString());
 		Map<String, OpenLibraryBook> response = restTemplate.exchange(openlibraryResourceUrl, HttpMethod.GET, null,
-				new ParameterizedTypeReference<Map<String, OpenLibraryBook>>() { }, isbn).getBody();		
+				new ParameterizedTypeReference<Map<String, OpenLibraryBook>>() { }, params).getBody();
 		Optional<OpenLibraryBook> optionalOpenLibraryBook = Optional.ofNullable(response.get("ISBN:" + isbn));		
 		
 		if (optionalOpenLibraryBook.isPresent() ) {			
