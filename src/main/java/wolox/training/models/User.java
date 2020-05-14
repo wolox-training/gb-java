@@ -17,13 +17,24 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import wolox.training.exceptions.BookAlreadyOwnedException;
 
 @Entity
+@Data(staticConstructor="of")
+@NoArgsConstructor
+@ToString(includeFieldNames=true)
 public class User {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Setter(AccessLevel.NONE)
 	private long id;
 
 	@NotNull
@@ -39,54 +50,22 @@ public class User {
 	
 	@ManyToMany(cascade={CascadeType.REFRESH, CascadeType.MERGE})
 	@JoinTable(name = "USER_BOOKS",
-	joinColumns = @JoinColumn(name = "userId", referencedColumnName = "id"), 
+	joinColumns = @JoinColumn(name = "userId", referencedColumnName = "id"),
 				inverseJoinColumns = @JoinColumn(name = "bookId", referencedColumnName = "id"))
+	//This means @Data will not produce a getter for this field so have to explicitly define it
+	@Getter(AccessLevel.NONE)
 	private List<Book> books = new ArrayList<Book>();
-	
-	
-	public User(){
-		super();
-	}
-	
-	public User(@NotNull String userName, @NotNull String name, @NotNull LocalDate birthDate) {
-		super();
-		this.userName = userName;
-		this.name = name;
-		this.birthDate = birthDate;
-	}
-	
-	public Long getId() {
-		return id;
-	}
-	
-	public String getUserName() {
-		return userName;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public LocalDate getBirthDate() {
-		return birthDate;
-	}
 
 	public List<Book> getBooks() {
 		return (List<Book>) Collections.unmodifiableList(books);
-	}	
+	}
 
-	public void setUserName(String userName) {
+	public User(@NotNull @Size(min = 6, message = "Debe ser de al menos 6 caracteres de longitud") String userName, @NotNull String name, @NotNull @Past(message = "No puede ser una fecha futura!") LocalDate birthDate) {
 		this.userName = userName;
-	}
-
-	public void setName(String name) {
 		this.name = name;
-	}
-
-	public void setBirthDate(LocalDate birthDate) {
 		this.birthDate = birthDate;
 	}
-	
+
 	public List<Book> addBook(Book userBook) throws BookAlreadyOwnedException {
 		if (books.contains(userBook)) {
 			throw new BookAlreadyOwnedException();

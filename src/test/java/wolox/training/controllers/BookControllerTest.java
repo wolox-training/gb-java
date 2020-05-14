@@ -1,6 +1,5 @@
 package wolox.training.controllers;
 
-
 import static org.mockito.BDDMockito.given;
 import static org.mockito.ArgumentMatchers.any;
 import static org.hamcrest.Matchers.hasSize;
@@ -221,7 +220,7 @@ public class BookControllerTest {
                         .andExpect(jsonPath("$[1].isbn").value("9780345802590"))
                         .andExpect(jsonPath("$", hasSize(2)));
     }
-	
+
 	public static String asJsonString(final Object obj) {
 	    try {
 	        return new ObjectMapper().writeValueAsString(obj);
