@@ -1,8 +1,7 @@
 package wolox.training.controllers;
 
-import java.util.Optional;
-
-import org.jboss.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,19 +15,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import wolox.training.TrainingApplication;
-import wolox.training.dtos.OpenLibraryBook;
 import wolox.training.exceptions.BookIdMismatchException;
 import wolox.training.exceptions.BookNotFoundException;
 import wolox.training.models.Book;
 import wolox.training.repositories.BookRepository;
 import wolox.training.services.OpenLibraryService;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/api/books")
 public class BookController {
-	private Logger log = Logger.getLogger(BookController.class);
+	private Logger log = LoggerFactory.getLogger(BookController.class);
 	
 	@Autowired
 	private BookRepository bookRepository;
@@ -43,8 +41,10 @@ public class BookController {
                                 ,@RequestParam(name = "year", required = false) String year
                                 ,@RequestParam(name = "publisher", required = false) String publisher
                                 ,@RequestParam(name = "genre", required = false) String genre) {
-	        log.info("En BookController -> findAllFiltered");
-	        return bookRepository.findAllFiltered(publisher, genre, year, author, title, subtitle);
+            log.info("GET all books request received");
+            log.info("Title = {}, subtitle = {}, author = {}, year = {}, publisher = {}, genre = {}",
+				title, subtitle, author, year, publisher, genre);
+            return bookRepository.findAllFiltered(publisher, genre, year, author, title, subtitle);
 	}
 	
 
@@ -64,7 +64,7 @@ public class BookController {
 	@GetMapping
 	@RequestMapping(params = "author")
 	public Book findByAuthor(@RequestParam(name = "author", required = true) String author) {
-		log.info("En BookController -> findByAuthor");
+		log.info("GET books by author {} request received", author);
 		// Sorting with a Sort Parameter
 		/*
 		  Sort sortByYear = Sort.by("year").descending(); Book book
@@ -78,11 +78,10 @@ public class BookController {
 	@GetMapping
 	@RequestMapping(params = "isbn")
 	public ResponseEntity<Book> findByIsbn(@RequestParam(name = "isbn", required = true) String isbn) {
-		log.info("Receive a GET request to find Book by isbn " + isbn);
-
+		log.info("GET request to find Book by isbn {} received", isbn);
 		Optional<Book> optionalBook = bookRepository.findFirstByIsbn(isbn);
 		if (!optionalBook.isPresent()) {
-			log.info("Book with isbn don't exist in local DB");
+			log.info("Book with isbn doesn't exist in local DB");
 			Book book = openLibraryService.bookInfo(isbn)
 					.orElseThrow(() -> new BookNotFoundException("No se encontro libro con isbn=" + isbn ));			
 			return new ResponseEntity<Book>(bookRepository.save(book), HttpStatus.CREATED);

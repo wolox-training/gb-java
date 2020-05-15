@@ -2,7 +2,8 @@ package wolox.training.controllers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.jboss.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import wolox.training.TrainingApplication;
 import wolox.training.exceptions.BookNotFoundException;
 import wolox.training.exceptions.UserIdMismatchException;
 import wolox.training.exceptions.UserNotFoundException;
@@ -31,7 +30,7 @@ import wolox.training.repositories.UserRepository;
 public class UserController {
 
 	Gson gson = new GsonBuilder().setPrettyPrinting().create();
-	private Logger log = Logger.getLogger(UserController.class);
+	private Logger log = LoggerFactory.getLogger(UserController.class);
 
 	@Autowired
 	private UserRepository userRepository;	
@@ -47,10 +46,10 @@ public class UserController {
 
 	@GetMapping("/{id}")
 	public User findOne(@PathVariable(required = true) Long id) {
-		log.info("Receive a GET request to find User  with id " + id );
+		log.info("GET request to find User by id {} received", id);
 		return userRepository.findById(id)
 				.orElseThrow(() -> {
-					log.error("No se encontro el usuario de id = " + id.toString());
+					log.error("User with id = {} not found", id);
 					return new UserNotFoundException("No se encontro el usuario de id=" + id.toString());
 				});
 	}
@@ -58,8 +57,8 @@ public class UserController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public User createUser(@RequestBody User user) {
-		log.info("Receive a POST request to create User ");
-		log.info("Body :\n" + gson.toJson(user));
+		log.info("POST request to create User received");
+		log.info("Body :\n {}", gson.toJson(user));
 		return userRepository.save(user);
 	}
 
