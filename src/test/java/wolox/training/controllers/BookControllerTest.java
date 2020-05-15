@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -41,6 +42,7 @@ import wolox.training.services.OpenLibraryService;
 
 
 @WebMvcTest(BookController.class)
+@ContextConfiguration(classes = {BookController.class, OpenLibraryService.class})
 public class BookControllerTest {
 
 	@Autowired
@@ -48,9 +50,6 @@ public class BookControllerTest {
 
 	@MockBean
 	private BookRepository repo;
-	
-	@MockBean
-	private OpenLibraryService openLibraryService;
 
 	@BeforeAll
 	public static void init() {
@@ -102,7 +101,7 @@ public class BookControllerTest {
 	}
 	
 	@Test
-	@Order(5)
+	@Order(4)
 	public void WhenPostBook_ThenReturnHttpStatusCREATED() throws Exception {
 		Book bookTDVC = new Book("Thriller","Dan Brown","ImageRL2","The Da Vinci Code","","Scribner","2003",689,"9780307474278");		
 		given(repo.save(any())).willReturn(bookTDVC);
@@ -124,20 +123,10 @@ public class BookControllerTest {
 					.andDo(print())				
 					.andExpect(status().isOk())					
 					.andExpect(jsonPath("$").doesNotExist());
-	}	
+	}
 	
 	@Test
 	@Order(6)
-	public void WhenDeleteBook_ThenReturnHttpStatusNOT_FOUND( ) throws Exception {		
-		given(repo.findById(any())).willReturn(Optional.empty());
-		mockMvc.perform(delete("/api/books/1"))
-			.andDo(print())
-			.andExpect(status().isNotFound())
-			.andExpect(content().string("No existe el libro de id=1"));
-	}	
-	
-	@Test
-	@Order(7)
 	public void WhenPutBook_ThenReturnHttpStatusOK( ) throws Exception {		
 		Book bookTDVC = new Book("Thriller","Dan Brown","ImageRL2","The Da Vinci Code","","Scribner","2003",689,"9780307474278");
 		Book bookTDVCmod = new Book("Thriller","Dan Brown","ImageRL2","The Da Vinci Code","modified","Scribner","2003",689,"9780307474278");
@@ -150,59 +139,28 @@ public class BookControllerTest {
 						.andDo(print())
 						.andExpect(status().isOk())						
 						.andExpect(MockMvcResultMatchers.jsonPath("$.subtitle").value("modified"));				
-	}	
-
-	@Test
-	@Order(8)
-	public void WhenPutBook_ThenReturnHttpStatusBAD_REQUEST( ) throws Exception {
-		Book bookTDVC = new Book("Thriller","Dan Brown","ImageRL2","The Da Vinci Code","","Scribner","2003",689,"9780307474278");
-		mockMvc.perform(put("/api/books/1")
-				.contentType(MediaType.APPLICATION_JSON)
-				.characterEncoding("UTF-8")
-				.content(asJsonString(bookTDVC)))
-					.andDo(print())
-					.andExpect(status().isBadRequest())
-					.andExpect(content().string("Id invalido"));
 	}
 
 	@Test
-	@Order(9)
+	@Order(7)
 	public void WhenGetBookByIsbnAndNotExist_ThenSaveNewBookAndReturnJsonBook() throws Exception {
 		given(repo.findFirstByIsbn(any())).willReturn(Optional.empty());
-		OpenLibraryBook openLibraryBook = new OpenLibraryBook("A feast for crows", "", Arrays.asList(new PublisherDTO("Bantam Books"))
-				,"2005", 753, Arrays.asList(new AuthorDTO("","George R.R. Martin"))
-				,new CoverDTO("","","https://covers.openlibrary.org/b/id/8745184-L.jpg")
-				,Arrays.asList( new SubjectDTO("","Fantasy fiction")));				
-		Book book = new Book("Fantasy fiction","George R.R. Martin","https://covers.openlibrary.org/b/id/8745184-L.jpg","A feast for crows","","Bantam Books","2005",753,"0553801503");
-		given(openLibraryService.bookInfo(any())).willReturn(Optional.of(book));
+		Book book = new Book("Fantasy fiction","Douglas Adams",
+			"https://covers.openlibrary.org/b/id/8745184-L.jpg","A feast for crows",
+			"","Bantam Books","2005",753,"0553801503");
 		given(repo.save(any())).willReturn(book);
 		mockMvc.perform( MockMvcRequestBuilders
 			    	.get("/api/books/")
-			    	.param("isbn", "0553801503")
+			    	.param("isbn", "0330258648")
 			    	.accept(MediaType.APPLICATION_JSON)
 			    	.characterEncoding("UTF-8"))
 						.andDo(print())
 						.andExpect(status().isCreated())
-						.andExpect(MockMvcResultMatchers.jsonPath("$.author").value("George R.R. Martin"));
-	}
-
-	@Test
-	@Order(10)
-	public void WhenGetBookByIsbnAndNotExistInBaseAndInOpenLibrayAPI_ThenReturnHttpStatusNOT_FOUND() throws Exception {
-		given(repo.findFirstByIsbn(any())).willReturn(Optional.empty());
-		given(openLibraryService.bookInfo(any())).willReturn(Optional.empty());				
-		mockMvc.perform( MockMvcRequestBuilders
-			    	.get("/api/books/")
-			    	.param("isbn", "0553801503")
-			    	.accept(MediaType.APPLICATION_JSON)
-			    	.characterEncoding("UTF-8"))
-						.andDo(print())
-						.andExpect(status().isNotFound())
-						.andExpect(content().string("No se encontro libro con isbn=0553801503"));						
+						.andExpect(MockMvcResultMatchers.jsonPath("$.author").value("Douglas Adams"));
 	}
 	
     @Test
-    @Order(11)
+    @Order(8)
     public void Given3BooksInDatabase_WhenGetAllBooksWithDexterAsTittleParam_ThenReturnAJsonArrayOf2Books() throws Exception {
         Book book1 = new Book("Crime","Jeff Lindsay","ImageDexter1","Darkly Dreaming Dexter","","Umbriel","2004",304,"9780752866765");
         Book book2 = new Book("Crime","Jeff Lindsay","ImageDexter8","Dexter Is Dead","","Umbriel","2016", 304,"9780345802590");
