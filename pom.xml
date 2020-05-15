@@ -72,12 +72,13 @@
 			<version>27.0-jre</version>		
 		</dependency>
 		<!-- end::guava -->
-
+		<!-- tag::jackson -->
 		<dependency>
-			<artifactId>gson</artifactId>
-			<groupId>com.google.code.gson</groupId>
-			<version>2.8.6</version>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>2.10.3</version>
 		</dependency>
+		<!-- end::jackson -->
 		
 	</dependencies>
 	<build>

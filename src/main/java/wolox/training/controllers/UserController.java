@@ -1,7 +1,8 @@
 package wolox.training.controllers;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ import wolox.training.repositories.UserRepository;
 @RequestMapping("/api/users")
 public class UserController {
 
-	Gson gson = new GsonBuilder().setPrettyPrinting().create();
+	private ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
 	private Logger log = LoggerFactory.getLogger(UserController.class);
 
 	@Autowired
@@ -56,9 +57,9 @@ public class UserController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public User createUser(@RequestBody User user) {
+	public User createUser(@RequestBody User user) throws JsonProcessingException {
 		log.info("POST request to create User received");
-		log.info("Body :\n {}", gson.toJson(user));
+		log.info("Body :\n " + objectWriter.writeValueAsString(user));
 		return userRepository.save(user);
 	}
 

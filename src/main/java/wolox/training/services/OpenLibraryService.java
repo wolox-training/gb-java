@@ -4,8 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+
 import org.jboss.logging.Logger;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -19,17 +21,18 @@ import wolox.training.models.Book;
 @Service
 public class OpenLibraryService {
 
-	Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+	private ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
 	private Logger log = Logger.getLogger(OpenLibraryService.class);
 
-	public Optional<Book> bookInfo(String isbn) {
+	public Optional<Book> bookInfo(String isbn) throws JsonProcessingException {
 		RestTemplate restTemplate = new RestTemplate();		
 		String openlibraryResourceUrl = "https://openlibrary.org/api/books?bibkeys=ISBN:{isbn}&format=json&jscmd=data";
 		HashMap<String, String> params = new HashMap<>();
 		params.put("isbn", isbn);
 		log.info("Try to do a GET request to Open Library");
 		log.info(" URL -> " + openlibraryResourceUrl);
-		log.info(" params : \n" + gson.toJson(params));
+		log.info(" params : \n" + objectWriter.writeValueAsString(params));
 		Map<String, OpenLibraryBook> response = restTemplate.exchange(openlibraryResourceUrl, HttpMethod.GET, null,
 				new ParameterizedTypeReference<Map<String, OpenLibraryBook>>() { }, params).getBody();
 		Optional<OpenLibraryBook> optionalOpenLibraryBook = Optional.ofNullable(response.get("ISBN:" + isbn));		

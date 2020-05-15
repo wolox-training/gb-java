@@ -1,5 +1,6 @@
 package wolox.training.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,7 +78,7 @@ public class BookController {
 
 	@GetMapping
 	@RequestMapping(params = "isbn")
-	public ResponseEntity<Book> findByIsbn(@RequestParam(name = "isbn", required = true) String isbn) {
+	public ResponseEntity<Book> findByIsbn(@RequestParam(name = "isbn", required = true) String isbn) throws JsonProcessingException {
 		log.info("GET request to find Book by isbn {} received", isbn);
 		Optional<Book> optionalBook = bookRepository.findFirstByIsbn(isbn);
 		if (!optionalBook.isPresent()) {
