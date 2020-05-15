@@ -4,14 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-
 
 import wolox.training.models.Book;
 
@@ -47,7 +45,7 @@ public class BookRepositoryTest {
 	public void Given_loaded_repositoryWhen_search_author_Jeff_LindsayThen_find_book_of_isbn_9780345802590() {
 		String author = "Jeff Lindsay";
 		Book foundedBook = bookRepository.findFirstByAuthorOrderByYearDesc(author).orElse(new Book());
-		assertThat("9780345802590".equals(foundedBook.getIsbn()));
+		assertThat("9780345802590".equals(foundedBook.getIsbn())).isTrue();
 	}
 
 	@Test
@@ -55,14 +53,14 @@ public class BookRepositoryTest {
 	public void Given_loaded_repositoryWhen_search_an_existent_authorThen_find_first_book_of_author_ordered_by_year() {
 		String author = "Jeff Lindsay";
 		Book foundedBook = bookRepository.findFirstByAuthorOrderByYear(author).orElse(new Book());
-		assertThat("9780752866765".equals(foundedBook.getIsbn()));
+		assertThat("9780752866765".equals(foundedBook.getIsbn())).isTrue();
 	}
 
 	@Test
 	@Order(4)
 	public void Given_loaded_repositoryWhen_search_a_non_existent_authorThen_not_find_books() {
 		String author = "Dan Brown";
-		assertThat(!bookRepository.findFirstByAuthorOrderByYearDesc(author).isPresent());
+		assertThat(!bookRepository.findFirstByAuthorOrderByYearDesc(author).isPresent()).isTrue();
 	}
 
 	@Test
@@ -77,14 +75,14 @@ public class BookRepositoryTest {
 	@Order(6)
 	public void Given_loaded_repositoryWhen_search_by_title_Then_find_a_book() {
 		Book foundedBook = bookRepository.findByTitle("The Analyst").orElse(new Book());
-		assertThat("9780552150217".equals(foundedBook.getIsbn()));
+		assertThat("9780552150217".equals(foundedBook.getIsbn())).isTrue();
 	}
 
 	@Test
 	@Order(7)
 	public void Given_loaded_repositoryWhen_search_a_non_existent_titleThen_not_find_a_book() {
 		String searchedTitle = "IT";
-		assertThat(!bookRepository.findByTitle(searchedTitle).isPresent());
+		assertThat(!bookRepository.findByTitle(searchedTitle).isPresent()).isTrue();
 	}
 	
 	@Test

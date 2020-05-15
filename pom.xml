@@ -44,8 +44,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>		
-		<!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
+		</dependency>
 		<!--
 		<dependency>
 		    <groupId>org.postgresql</groupId>
@@ -54,13 +53,13 @@
 		</dependency>
 		-->
 		<dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>1.4.199</version><!--$NO-MVN-MAN-VER$-->
-            <scope>runtime</scope>    		
-        </dependency>
-        <!-- tag::template engine thymeleaf -->
-        <dependency>
+    	<groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+			<version>1.4.199</version><!--$NO-MVN-MAN-VER$-->
+			<scope>runtime</scope>
+		</dependency>
+		<!-- tag::template engine thymeleaf -->
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
@@ -72,7 +71,44 @@
 			<version>27.0-jre</version>		
 		</dependency>
 		<!-- end::guava -->
-		
+
+		<!-- tag::springfox-swagger2 -->
+		<dependency>
+			<artifactId>springfox-swagger2</artifactId>
+			<groupId>io.springfox</groupId>
+			<version>2.9.2</version>
+		</dependency>
+		<!-- end::springfox-swagger2 -->
+		<!-- tag::springfox-swagger-ui -->
+		<dependency>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<groupId>io.springfox</groupId>
+			<version>2.9.2</version>
+		</dependency>
+		<!-- end::springfox-swagger-ui -->
+		<!-- tag::spring-plugin-core -->
+		<dependency>
+			<artifactId>spring-plugin-core</artifactId>
+			<groupId>org.springframework.plugin</groupId>
+			<version>1.2.0.RELEASE</version>
+		</dependency>
+		<!-- end::spring-plugin-core -->
+		<!-- tag::wiremock -->
+		<dependency>
+			<groupId>com.github.tomakehurst</groupId>
+			<artifactId>wiremock</artifactId>
+			<version>2.26.3</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- end::wiremock -->
+		<!-- tag::lombok -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.12</version>
+			<scope>provided</scope>
+		</dependency>
+		<!-- end::lombok -->
 	</dependencies>
 	<build>
 		<plugins>
